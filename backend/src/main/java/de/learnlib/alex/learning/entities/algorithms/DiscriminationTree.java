@@ -22,7 +22,7 @@ import de.learnlib.algorithms.discriminationtree.hypothesis.HState;
 import de.learnlib.algorithms.discriminationtree.mealy.DTLearnerMealy;
 import de.learnlib.algorithms.discriminationtree.mealy.DTLearnerMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDTNode;
 import de.learnlib.datastructure.discriminationtree.model.AbstractWordBasedDiscriminationTree;
 import net.automatalib.words.Alphabet;
@@ -42,8 +42,9 @@ public class DiscriminationTree extends AbstractLearningAlgorithm<String, String
     private static final long serialVersionUID = 2655022507456200915L;
 
     @Override
-    public LearningAlgorithm.MealyLearner<String, String> createLearner(Alphabet<String> sigma,
-            MembershipOracle<String, Word<String>> oracle) {
+    public LearningAlgorithm.MealyLearner<String, String> createLearner(
+            Alphabet<String> sigma,
+            SymbolQueryOracle<String, String> oracle) {
         return new DTLearnerMealyBuilder<String, String>()
                 .withAlphabet(sigma)
                 .withOracle(oracle)

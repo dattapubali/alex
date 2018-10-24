@@ -31,6 +31,7 @@ import de.learnlib.alex.testing.dao.TestDAO;
 import de.learnlib.alex.webhooks.services.WebhookService;
 import de.learnlib.api.algorithm.feature.SupportsGrowingAlphabet;
 import de.learnlib.filter.cache.mealy.MealyCacheOracle;
+import de.learnlib.filter.cache.mealy.SymbolQueryCache;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.SimpleAlphabet;
 import org.apache.logging.log4j.ThreadContext;
@@ -98,7 +99,7 @@ public class ResumingLearnerThread extends AbstractLearnerThread<LearnerResumeCo
                     final Alphabet<String> alphabet = new SimpleAlphabet<>(abstractAlphabet);
                     alphabet.add(symbol.getComputedName());
 
-                    this.mqOracle.setDelegate(MealyCacheOracle.createDAGCacheOracle(alphabet, monitorOracle));
+                    this.mqOracle.setDelegate(new SymbolQueryCache<>(monitorOracle, alphabet));
                 }
 
                 // measure how much time and membership queries it takes to add the symbol
@@ -108,9 +109,9 @@ public class ResumingLearnerThread extends AbstractLearnerThread<LearnerResumeCo
 
                 final Statistics statistics = new Statistics();
                 statistics.getDuration().setLearner(end - start);
-                statistics.getMqsUsed().setLearner(counterOracle.getQueryCount());
+                statistics.getMqsUsed().setLearner(counterOracle.getResetCount());
                 statistics.getSymbolsUsed().setLearner(counterOracle.getSymbolCount());
-                counterOracle.reset();
+                counterOracle.resetCounters();
 
                 final LearnerResultStep step = learnerResultDAO.createStep(result);
                 step.setHypothesis(CompactMealyMachineProxy.createFrom(learner.getHypothesisModel(), abstractAlphabet));

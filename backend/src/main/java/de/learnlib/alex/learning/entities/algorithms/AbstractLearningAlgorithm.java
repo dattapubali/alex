@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.algorithm.feature.ResumableLearner;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -39,6 +40,7 @@ import java.io.Serializable;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "name")
 @JsonSubTypes({
+        @JsonSubTypes.Type(name = "ADT", value = ADT.class),
         @JsonSubTypes.Type(name = "DHC", value = DHC.class),
         @JsonSubTypes.Type(name = "DT", value = DiscriminationTree.class),
         @JsonSubTypes.Type(name = "KEARNS_VAZIRANI", value = KearnsVazirani.class),
@@ -58,8 +60,9 @@ public abstract class AbstractLearningAlgorithm<I, O> implements Serializable {
      *         The membership oracle.
      * @return An instance of the learner.
      */
-    public abstract LearningAlgorithm.MealyLearner<I, O> createLearner(Alphabet<I> alphabet,
-            MembershipOracle<I, Word<O>> oracle);
+    public abstract LearningAlgorithm.MealyLearner<I, O> createLearner(
+            Alphabet<I> alphabet,
+            SymbolQueryOracle<I, O> oracle);
 
     /**
      * Get the internal data structures as string representation.

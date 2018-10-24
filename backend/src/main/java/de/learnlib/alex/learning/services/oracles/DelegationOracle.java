@@ -19,7 +19,7 @@ package de.learnlib.alex.learning.services.oracles;
 import de.learnlib.alex.common.exceptions.LearnerInterruptedException;
 import de.learnlib.alex.common.utils.LoggerMarkers;
 import de.learnlib.alex.learning.exceptions.LearnerException;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +37,7 @@ import java.util.Collection;
  *         Output symbol type.
  */
 @ParametersAreNonnullByDefault
-public class DelegationOracle<I, O> implements MembershipOracle<I, Word<O>> {
+public class DelegationOracle<I, O> implements SymbolQueryOracle<I, O> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -48,7 +48,7 @@ public class DelegationOracle<I, O> implements MembershipOracle<I, Word<O>> {
     private static final int SLEEP_TIME = 2000;
 
     /** The sul the membership queries should be posed to. */
-    private MembershipOracle<I, Word<O>> delegate;
+    private SymbolQueryOracle<I, O> delegate;
 
     /** Constructor. */
     public DelegationOracle() {
@@ -60,8 +60,18 @@ public class DelegationOracle<I, O> implements MembershipOracle<I, Word<O>> {
      * @param delegate
      *         The membership oracle the queries are delegated to.
      */
-    public DelegationOracle(MembershipOracle<I, Word<O>> delegate) {
+    public DelegationOracle(SymbolQueryOracle<I, O> delegate) {
         this.delegate = delegate;
+    }
+
+    @Override
+    public O query(I i) {
+        return delegate.query(i);
+    }
+
+    @Override
+    public void reset() {
+        delegate.reset();
     }
 
     @Override
@@ -93,7 +103,7 @@ public class DelegationOracle<I, O> implements MembershipOracle<I, Word<O>> {
         }
     }
 
-    public void setDelegate(MembershipOracle<I, Word<O>> delegate) {
+    public void setDelegate(SymbolQueryOracle<I, O> delegate) {
         this.delegate = delegate;
     }
 

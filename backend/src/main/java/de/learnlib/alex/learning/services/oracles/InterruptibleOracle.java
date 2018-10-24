@@ -17,11 +17,7 @@
 package de.learnlib.alex.learning.services.oracles;
 
 import de.learnlib.alex.common.exceptions.LearnerInterruptedException;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
-
-import java.util.Collection;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 
 /**
  * Membership oracle that can be interrupted to pose queries to a delegate.
@@ -31,10 +27,10 @@ import java.util.Collection;
  * @param <O>
  *         The output symbol type.
  */
-public class InterruptibleOracle<I, O> implements MembershipOracle<I, Word<O>> {
+public class InterruptibleOracle<I, O> implements SymbolQueryOracle<I, O> {
 
     /** The oracle to delegate queries to. */
-    private final MembershipOracle<I, Word<O>> delegate;
+    private final SymbolQueryOracle<I, O> delegate;
 
     /** If the process has been interrupted. */
     private boolean interrupted;
@@ -45,18 +41,22 @@ public class InterruptibleOracle<I, O> implements MembershipOracle<I, Word<O>> {
      * @param delegate
      *         {@link #delegate}
      */
-    public InterruptibleOracle(MembershipOracle<I, Word<O>> delegate) {
+    public InterruptibleOracle(SymbolQueryOracle<I, O> delegate) {
         this.delegate = delegate;
         this.interrupted = false;
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<I, Word<O>>> collection) {
+    public O query(I i) {
+        return delegate.query(i);
+    }
+
+    @Override
+    public void reset() {
         if (interrupted) {
             throw new LearnerInterruptedException("Learning process aborted by user.");
         }
-
-        delegate.processQueries(collection);
+        delegate.reset();
     }
 
     /** Interrupt the oracle. */

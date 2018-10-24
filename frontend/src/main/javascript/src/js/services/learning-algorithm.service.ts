@@ -29,6 +29,8 @@ export class LearningAlgorithmService {
    */
   create(obj: any): any {
     switch (obj.type) {
+      case learnAlgorithm.ADT:
+        return {name: learnAlgorithm.ADT};
       case learnAlgorithm.DHC:
         return {name: learnAlgorithm.DHC};
       case learnAlgorithm.DT:

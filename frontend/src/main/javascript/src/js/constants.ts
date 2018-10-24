@@ -19,7 +19,8 @@ export const learnAlgorithm = {
   DHC: 'DHC',
   DT: 'DT',
   TTT: 'TTT',
-  KEARNS_VAZIRANI: 'KEARNS_VAZIRANI'
+  KEARNS_VAZIRANI: 'KEARNS_VAZIRANI',
+  ADT: 'ADT'
 };
 
 export const symbolParameterType = {

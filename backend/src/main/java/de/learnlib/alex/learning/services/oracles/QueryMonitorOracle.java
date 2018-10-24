@@ -17,7 +17,9 @@
 package de.learnlib.alex.learning.services.oracles;
 
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.Query;
+import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import net.automatalib.words.Word;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,7 +34,7 @@ import java.util.List;
  * @param <O> Output symbol type.
  */
 @ParametersAreNonnullByDefault
-public class QueryMonitorOracle<I, O> implements MembershipOracle<I, Word<O>> {
+public class QueryMonitorOracle<I, O> implements SymbolQueryOracle<I, O> {
 
     /**
      * The query listener interface.
@@ -47,7 +49,7 @@ public class QueryMonitorOracle<I, O> implements MembershipOracle<I, Word<O>> {
     }
 
     /** The sul the membership queries should be posed to. */
-    private final MembershipOracle<I, Word<O>> delegate;
+    private final SymbolQueryOracle<I, O> delegate;
 
     /** The pre process listeners. */
     private List<QueryProcessingListener<I, O>> preProcessListeners;
@@ -60,10 +62,20 @@ public class QueryMonitorOracle<I, O> implements MembershipOracle<I, Word<O>> {
      *
      * @param delegate The membership oracle the queries are delegated to.
      */
-    public QueryMonitorOracle(MembershipOracle<I, Word<O>> delegate) {
+    public QueryMonitorOracle(SymbolQueryOracle<I, O> delegate) {
         this.delegate = delegate;
         this.preProcessListeners = new ArrayList<>();
         this.postProcessListeners = new ArrayList<>();
+    }
+
+    @Override
+    public O query(I i) {
+        return delegate.query(i);
+    }
+
+    @Override
+    public void reset() {
+        delegate.reset();
     }
 
     /**

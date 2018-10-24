@@ -22,6 +22,7 @@ import de.learnlib.algorithms.dhc.mealy.MealyDHCBuilder;
 import de.learnlib.algorithms.dhc.mealy.MealyDHCState;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -40,7 +41,7 @@ public class DHC extends AbstractLearningAlgorithm<String, String> implements Se
 
     @Override
     public LearningAlgorithm.MealyLearner<String, String> createLearner(Alphabet<String> sigma,
-            MembershipOracle<String, Word<String>> oracle) {
+            SymbolQueryOracle<String, String> oracle) {
         return new MealyDHCBuilder<String, String>()
                 .withAlphabet(sigma)
                 .withOracle(oracle)

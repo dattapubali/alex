@@ -21,21 +21,22 @@ import de.learnlib.alex.learning.services.SymbolMapper;
 import de.learnlib.alex.learning.services.connectors.ConnectorContextHandler;
 import de.learnlib.alex.learning.services.connectors.ConnectorManager;
 import de.learnlib.api.SUL;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.api.query.Query;
 import de.learnlib.mapper.ContextExecutableInputSUL;
 import de.learnlib.mapper.SULMappers;
 import de.learnlib.mapper.api.ContextExecutableInput;
 import de.learnlib.oracle.membership.SULOracle;
+import de.learnlib.oracle.membership.SULSymbolQueryOracle;
 import net.automatalib.words.Word;
 
 import java.util.Collection;
 
 /** Wrapper for a {@link SULOracle} that knows its context. */
-public class ContextAwareSulOracle implements MembershipOracle<String, Word<String>> {
+public class ContextAwareSulOracle implements SymbolQueryOracle<String, String> {
 
     /** The oracle to pose queries to. */
-    private final SULOracle<String, String> sulOracle;
+    private final SULSymbolQueryOracle<String, String> sulOracle;
 
     /** The context handler for the learning process. */
     private final ConnectorContextHandler contextHandler;
@@ -54,7 +55,17 @@ public class ContextAwareSulOracle implements MembershipOracle<String, Word<Stri
         final ContextExecutableInputSUL<ContextExecutableInput<ExecuteResult, ConnectorManager>, ExecuteResult, ConnectorManager> ceiSUL
                 = new ContextExecutableInputSUL<>(contextHandler);
         final SUL<String, String> sul = SULMappers.apply(symbolMapper, ceiSUL);
-        this.sulOracle = new SULOracle<>(sul);
+        this.sulOracle = new SULSymbolQueryOracle<>(sul);
+    }
+
+    @Override
+    public String query(String s) {
+        return sulOracle.query(s);
+    }
+
+    @Override
+    public void reset() {
+        sulOracle.reset();
     }
 
     @Override

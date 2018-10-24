@@ -23,7 +23,7 @@ import de.learnlib.algorithms.ttt.base.TTTLearnerState;
 import de.learnlib.algorithms.ttt.mealy.TTTLearnerMealy;
 import de.learnlib.algorithms.ttt.mealy.TTTLearnerMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -41,8 +41,9 @@ public class TTT extends AbstractLearningAlgorithm<String, String> implements Se
     private static final long serialVersionUID = -7594934697689034183L;
 
     @Override
-    public LearningAlgorithm.MealyLearner<String, String> createLearner(Alphabet<String> sigma,
-            MembershipOracle<String, Word<String>> oracle) {
+    public LearningAlgorithm.MealyLearner<String, String> createLearner(
+            Alphabet<String> sigma,
+            SymbolQueryOracle<String, String> oracle) {
         return new TTTLearnerMealyBuilder<String, String>()
                 .withAlphabet(sigma)
                 .withOracle(oracle)

@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+
 package de.learnlib.alex.learning.entities.algorithms;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import de.learnlib.algorithms.kv.mealy.KearnsVaziraniMealy;
-import de.learnlib.algorithms.kv.mealy.KearnsVaziraniMealyBuilder;
-import de.learnlib.algorithms.kv.mealy.KearnsVaziraniMealyState;
+import de.learnlib.algorithms.adt.automaton.ADTState;
+import de.learnlib.algorithms.adt.learner.ADTLearner;
+import de.learnlib.algorithms.adt.learner.ADTLearnerBuilder;
+import de.learnlib.algorithms.adt.learner.ADTLearnerState;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.SymbolQueryOracle;
 import net.automatalib.words.Alphabet;
@@ -27,28 +29,23 @@ import net.automatalib.words.Alphabet;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
 
-/**
- * Class that provides the LearnLib implementation of the Kearns Vazirani algorithm for ALEX.
- */
-@JsonTypeName("KEARNS_VAZIRANI")
-public class KearnsVazirani extends AbstractLearningAlgorithm<String, String> implements Serializable {
-
-    private static final long serialVersionUID = 4571297392539122947L;
+/** Wrapper class for the {@link de.learnlib.algorithms.adt.learner.ADTLearner} algorithm. */
+@JsonTypeName("ADT")
+public class ADT extends AbstractLearningAlgorithm<String, String> {
 
     @Override
     public LearningAlgorithm.MealyLearner<String, String> createLearner(
             Alphabet<String> alphabet,
-            SymbolQueryOracle<String, String> membershipOracle) {
-        return new KearnsVaziraniMealyBuilder<String, String>()
+            SymbolQueryOracle<String, String> oracle) {
+        return new ADTLearnerBuilder<String, String>()
                 .withAlphabet(alphabet)
-                .withOracle(membershipOracle)
+                .withOracle(oracle)
                 .create();
     }
 
     @Override
-    public String getInternalData(LearningAlgorithm.MealyLearner<String, String> mealyLearner) {
+    public String getInternalData(LearningAlgorithm.MealyLearner<String, String> learner) {
         return "";
     }
 
@@ -56,9 +53,9 @@ public class KearnsVazirani extends AbstractLearningAlgorithm<String, String> im
     public void resume(LearningAlgorithm.MealyLearner<String, String> learner, byte[] data)
             throws IOException, ClassNotFoundException {
         try (final ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(data))) {
-            final KearnsVaziraniMealyState<String, String> state =
-                    (KearnsVaziraniMealyState<String, String>) objectIn.readObject();
-            ((KearnsVaziraniMealy<String, String>) learner).resume(state);
+            final ADTLearnerState<ADTState<String, String>, String, String> state
+                    = (ADTLearnerState<ADTState<String, String>, String, String>) objectIn.readObject();
+            ((ADTLearner<String, String>) learner).resume(state);
         }
     }
 }

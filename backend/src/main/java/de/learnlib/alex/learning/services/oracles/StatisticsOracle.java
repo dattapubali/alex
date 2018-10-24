@@ -16,39 +16,39 @@
 
 package de.learnlib.alex.learning.services.oracles;
 
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.api.query.Query;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 
-import java.util.Collection;
+public class StatisticsOracle<I, O> implements SymbolQueryOracle<I, O> {
 
-public class StatisticsOracle<I, D> implements MembershipOracle<I, D> {
-
-    private final MembershipOracle<I, D> delegate;
-
-    private long queryCount = 0;
+    private final SymbolQueryOracle<I, O> delegate;
 
     private long symbolCount = 0;
 
-    public StatisticsOracle(MembershipOracle<I, D> delegate) {
+    private long resetCount = 0;
+
+    public StatisticsOracle(SymbolQueryOracle<I, O> delegate) {
         this.delegate = delegate;
     }
 
     @Override
-    public void processQueries(Collection<? extends Query<I, D>> queries) {
-        queryCount += queries.size();
-        for (Query<I, D> qry : queries) {
-            symbolCount += qry.getInput().length();
-        }
-        delegate.processQueries(queries);
+    public O query(I i) {
+        symbolCount++;
+        return delegate.query(i);
     }
 
+    @Override
     public void reset() {
-        queryCount = 0;
+        resetCount++;
+        delegate.reset();
+    }
+
+    public void resetCounters() {
+        resetCount = 0;
         symbolCount = 0;
     }
 
-    public long getQueryCount() {
-        return queryCount;
+    public long getResetCount() {
+        return resetCount;
     }
 
     public long getSymbolCount() {

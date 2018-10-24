@@ -120,6 +120,8 @@ export function formatWebBrowser(): (string) => string {
 export function formatAlgorithm(): (string) => string {
   return name => {
     switch (name) {
+      case learnAlgorithm.ADT:
+        return 'ADT';
       case learnAlgorithm.LSTAR:
         return 'L*';
       case learnAlgorithm.DHC:

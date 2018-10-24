@@ -21,7 +21,7 @@ import de.learnlib.algorithms.lstar.AutomatonLStarState;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealy;
 import de.learnlib.algorithms.lstar.mealy.ExtensibleLStarMealyBuilder;
 import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.api.oracle.SymbolQueryOracle;
 import de.learnlib.datastructure.observationtable.ObservationTable;
 import de.learnlib.datastructure.observationtable.writer.ObservationTableASCIIWriter;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
@@ -42,8 +42,9 @@ public class LStar extends AbstractLearningAlgorithm<String, String> implements 
     private static final long serialVersionUID = -4916532996322906039L;
 
     @Override
-    public LearningAlgorithm.MealyLearner<String, String> createLearner(Alphabet<String> sigma,
-            MembershipOracle<String, Word<String>> oracle) {
+    public LearningAlgorithm.MealyLearner<String, String> createLearner(
+            Alphabet<String> sigma,
+            SymbolQueryOracle<String, String> oracle) {
         return new ExtensibleLStarMealyBuilder<String, String>()
                 .withAlphabet(sigma)
                 .withOracle(oracle)
